@@ -5,7 +5,7 @@ export type Duracion = "1d" | "7d" | "1mes" | "3mes" | "6mes" | "1año";
 export type Visibilidad = "all" | "limitado";
 
 export interface Licencia {
-  id: string;
+  id: mongoose.Schema.Types.ObjectId;
   nombre: string;
   fechaAdq: Date;
   fechaVenc: Date;
@@ -21,13 +21,13 @@ export interface Licencia {
 }
 
 export interface Oficina {
-  id: string;
+  id: mongoose.Schema.Types.ObjectId;
   nombre: string;
   estado: boolean;
 }
 
 export interface Usuario {
-  id: string;
+  id: mongoose.Schema.Types.ObjectId;
   nombre: string;
   email: string;
   password: string;
