@@ -31,7 +31,7 @@ export interface Usuario {
   nombre: string;
   email: string;
   password: string;
-  oficinaId: string;
+  oficinaId?: string;
   rol: Roles;
   habilitado: boolean;
 }

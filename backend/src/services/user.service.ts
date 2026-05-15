@@ -4,7 +4,7 @@ import {
   UsuarioRegisterBody,
   UsuarioLoginBody,
 } from "../controllers/user.controller.js";
-import { UserToken, comparePass } from "../utils/auth.js";
+import { UserToken, comparePass, hashPassword } from "../utils/auth.js";
 
 export default class UserService {
   constructor() {}
@@ -14,8 +14,15 @@ export default class UserService {
       let usuario: Usuario | null = await UserModel.findOne({
         email: datos.email,
       });
+      console.log(usuario);
+
       if (!usuario) return null;
-      let validatePass = comparePass(datos.password, usuario.password);
+      console.log(datos.password);
+      console.log(usuario.password);
+      
+      let validatePass = await comparePass(datos.password, usuario.password);
+      console.log(validatePass);
+      
       if (!validatePass) return null;
 
       let userToken: UserToken = {
@@ -33,7 +40,9 @@ export default class UserService {
 
   async register(datos: UsuarioRegisterBody) {
     try {
-      await UserModel.create(datos);
+      const hashed = await hashPassword(datos.password);
+      let usuario= await UserModel.create({ ...datos, password: hashed });
+      return usuario;
     } catch (error) {
       console.log(error);
     }

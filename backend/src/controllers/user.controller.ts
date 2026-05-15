@@ -39,12 +39,14 @@ const login = async (req: Request<{}, {}, UsuarioLoginBody>, res: Response) => {
     return res.status(200).send({ payload: "Login!" });
   } catch (error) {}
 };
+
 const register = async (
   req: Request<{}, {}, UsuarioRegisterBody>,
   res: Response,
 ) => {
   try {
     let { nombre, email, password, oficinaId } = req.body;
+
     if (!nombre || !email || !password || oficinaId) {
       return res.status(400).send({ error: "Faltan datos!" });
     }
