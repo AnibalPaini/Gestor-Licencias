@@ -1,10 +1,26 @@
 import { Request, Response } from "express";
 import LicenciaService from "../services/licencias.service.js";
-import { Licencia } from "../types/types.js";
+import { Licencia, Duracion, Visibilidad } from "../types/types.js";
+import mongoose from "mongoose";
 
 const licenciaService = new LicenciaService();
 
-export type LicenciaBody = Omit<Licencia, "id">;
+export type LicenciaBody = {
+  nombre: string;
+  fechaAdq: string;
+  fechaVenc: string;
+  duracion?: Duracion;
+  proveedor?: string;
+  descripcion?: string;
+  expediente?: string;
+  estado: boolean;
+  visibilidad: Visibilidad;
+  oficinasIds?: string[];
+  usuariosIds?: string[];
+  usuarioCreador: mongoose.Schema.Types.ObjectId;
+};
+
+export type LicenciaUpdateBody = Partial<LicenciaBody>;
 
 const getLicencias = async (req: Request, res: Response) => {
   try {
@@ -59,6 +75,40 @@ const postLicencia = async (
   }
 };
 
+const putLicencia = async (
+  req: Request<{ id: string }, {}, LicenciaUpdateBody>,
+  res: Response,
+) => {
+  try {
+    const id = req.params.id;
+    const datos = req.body;
+    const licenciaUpdated = await licenciaService.put(id, datos);
+    if (!licenciaUpdated)
+      return res
+        .status(400)
+        .send({ error: "Error al actualziar, verificar datos ingresados." });
+
+    return res.status(200).send({ payload: licenciaUpdated });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: "Error interno del servidor!" });
+  }
+};
+
+const deleteLicencia = async (req: Request<{ id: string }>, res: Response) => {
+  try {
+    const id = req.params.id;
+    const licenciaDeleted = await licenciaService.delete(id);
+    if (!licenciaDeleted)
+      return res.status(404).send({ error: "Licencia no encontrada" });
+    return res.status(200).send({payload:`Licencia ${id} eliminada`})
+  } catch (error) {}
+};
+
 export default {
   getLicencias,
+  getLicenciasById,
+  postLicencia,
+  putLicencia,
+  deleteLicencia
 };

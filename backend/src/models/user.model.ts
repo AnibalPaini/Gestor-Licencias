@@ -6,8 +6,17 @@ const UserSchema = new mongoose.Schema<Usuario>({
   email: { type: String, required: true },
   password: { type: String, required: true },
   oficinaId: { type: String },
-  rol: { type: String, enum: ["admin", "usuario"], default: "usuario", required: true },
+  rol: {
+    type: String,
+    enum: ["admin", "usuario"],
+    default: "usuario",
+    required: true,
+  },
   habilitado: { type: Boolean, default: true },
+  refreshToken: {
+    type: String,
+    default: "",
+  },
 });
 
 const UserModel = mongoose.model<Usuario>("Usuario", UserSchema);

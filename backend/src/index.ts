@@ -2,7 +2,7 @@ import express from "express";
 import config from "./config/config.js";
 import { connectMongo } from "./config/connectDB.js";
 import cookieParser from "cookie-parser";
-import { userRutes } from "./routes/index.js";
+import { userRutes, licenciaRouter } from "./routes/index.js";
 
 const app = express();
 app.use(express.json());
@@ -14,6 +14,7 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/api/user", userRutes)
+app.use("/api/licencia", licenciaRouter)
 
 app.listen(config.port, () => {
   console.log("Servidor en puerto ", config.port);

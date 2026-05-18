@@ -27,11 +27,12 @@ export interface Oficina {
 }
 
 export interface Usuario {
-  id: mongoose.Schema.Types.ObjectId;
+  _id: mongoose.Schema.Types.ObjectId;
   nombre: string;
   email: string;
   password: string;
   oficinaId?: string;
   rol: Roles;
   habilitado: boolean;
+  refreshToken?:string;
 }

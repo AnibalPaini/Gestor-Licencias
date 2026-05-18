@@ -7,4 +7,5 @@ export default {
   mongoUri: process.env.MongoUri,
   secretJWT: process.env.JWT_SECRET,
   secretCookie: process.env.COOKIE_SECRET,
+  refreshSecretJWT:process.env.REFRESH_JWT_TOKEN
 };

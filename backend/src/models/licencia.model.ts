@@ -20,5 +20,5 @@ const LicenciaSchema = new mongoose.Schema<Licencia>({
   estado: { type: Boolean, required: true, default: true },
 });
 
-const LicenciaModel = mongoose.model<Licencia>("Usuario", LicenciaSchema);
+const LicenciaModel = mongoose.model<Licencia>("Licencia", LicenciaSchema);
 export default LicenciaModel;

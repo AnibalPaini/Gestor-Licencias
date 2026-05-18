@@ -1,9 +1,9 @@
-import { Usuario } from "../types.js";
+import { UserToken } from "../../utils/auth.ts";
 
 declare global {
   namespace Express {
     interface Request {
-      user?: Usuario;
+      user?: UserToken;
     }
   }
 }

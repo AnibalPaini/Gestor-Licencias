@@ -24,18 +24,29 @@ const login = async (req: Request<{}, {}, UsuarioLoginBody>, res: Response) => {
     if (!email || !password) {
       return res.status(400).send({ error: "Debe completar los campos" });
     }
-    let usuario = await userService.login({ email, password });
-    if (!usuario)
+    let data = await userService.login({ email, password });
+    if (!data)
       return res.status(400).send({ error: "Credenciales no validas!" });
 
-    let token = generateToken(usuario);
+    //Access token
+    let token = generateToken(data.user);
     res.cookie("token", token, {
       httpOnly: true,
       signed: true,
       secure: false,
       sameSite: "lax",
-      maxAge: 1000 * 60 * 60 * 24,
+      maxAge: 1000 * 60 * 30,
     });
+
+    // REFRESH TOKEN
+    res.cookie("refreshToken", data.refreshToken, {
+      httpOnly: true,
+      signed: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    });
+
     return res.status(200).send({ payload: "Login!" });
   } catch (error) {}
 };
@@ -58,7 +69,31 @@ const register = async (
   }
 };
 
+const refresh = async (req: Request, res: Response) => {
+  try {
+    const refreshToken: string = req.signedCookies.refreshToken;
+    if (!refreshToken) {
+      return res.status(401).send({ error: "No autorizado" });
+    }
+    let accessToken = await userService.refresh(refreshToken);
+    if (!accessToken) {
+      return res.status(404).send("No valido");
+    }
+    res.cookie("token", accessToken, {
+      httpOnly: true,
+      signed: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 1000 * 60 * 30,
+    });
+    return res.status(200).send({
+      message: "Token renovado",
+    });
+  } catch (error) {}
+};
+
 export default {
   register,
   login,
+  refresh,
 };
